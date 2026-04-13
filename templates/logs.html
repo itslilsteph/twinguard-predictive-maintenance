@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TwinGuard Logs</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      .logs-container {
+        padding: 20px;
+      }
+
+      .logs-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .logs-header h2 {
+        margin: 0;
+        color: #2e7d32;
+      }
+
+      .header-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: end;
+        margin-bottom: 20px;
+      }
+
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .control-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+      }
+
+      .control-group select,
+      .control-group input {
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: white;
+        min-width: 160px;
+      }
+
+      .download-btn {
+        background-color: #74a076;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .download-btn:hover {
+        background-color: #5f8b62;
+      }
+
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        color: #d32f2f;
+      }
+
+      .live-dot {
+        width: 10px;
+        height: 10px;
+        background: #d32f2f;
+        border-radius: 50%;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .chart-card {
+        background: white;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+
+      .chart-card h3 {
+        margin: 0 0 12px 0;
+        color: #2e7d32;
+      }
+
+      .chart-wrap {
+        position: relative;
+        height: 300px;
+        width: 100%;
+      }
+
+      .table-tools {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .entries-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      .entries-box select {
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: white;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th {
+        background-color: #74a076;
+        color: white;
+        padding: 10px;
+        font-size: 13px;
+      }
+
+      td {
+        padding: 8px;
+        text-align: center;
+        font-size: 13px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f5f5f5;
+      }
+
+      .row-mild {
+        background-color: #fff8cc !important;
+      }
+
+      .row-moderate {
+        background-color: #ffe1bf !important;
+      }
+
+      .row-critical {
+        background-color: #ffd6d6 !important;
+      }
+
+      .sev-normal {
+        color: #4caf50;
+        font-weight: 600;
+      }
+      .sev-mild {
+        color: #c7a008;
+        font-weight: 600;
+      }
+      .sev-moderate {
+        color: #f57c00;
+        font-weight: 600;
+      }
+      .sev-critical {
+        color: #d32f2f;
+        font-weight: 600;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .pagination button {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        background: #74a076;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .pagination button:disabled {
+        background: #b9cbb9;
+        cursor: not-allowed;
+      }
+
+      .page-info {
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 15px;
+        text-decoration: none;
+        color: #74a076;
+        font-weight: 600;
+      }
+
+      .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 0;
+        text-decoration: none;
+        color: #74a076;
+        font-weight: 600;
+      }
+
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        color: #d32f2f;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>TwinGuard Logs</h1>
+      <p>Historical motor vibration data</p>
+    </header>
+
+    <div class="main-container">
+      <div class="logs-container">
+        <div class="top-row">
+          <a href="/" class="back-link">← Back to Dashboard</a>
+
+          <div class="live-indicator" id="liveIndicator">
+            <span class="live-dot"></span>
+            <span>Live</span>
+          </div>
+        </div>
+
+        <div class="logs-header">
+          <h2>Recent Logs</h2>
+
+          <div class="header-actions">
+            <button class="download-btn" onclick="downloadLogs()">
+              Download CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="control-group">
+            <label for="logType">Log Type</label>
+            <select id="logType">
+              <option value="full">Full Logs</option>
+              <option value="fault">Fault Logs</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="period">Show</label>
+            <select id="period">
+              <option value="today">Today</option>
+              <option value="week">Past Week</option>
+              <option value="month">Past Month</option>
+              <option value="year">Past Year</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="viewBy">View By</label>
+            <select id="viewBy"></select>
+          </div>
+
+          <div class="control-group hidden" id="startGroup">
+            <label for="startDate">From</label>
+            <input type="datetime-local" id="startDate" />
+          </div>
+
+          <div class="control-group hidden" id="endGroup">
+            <label for="endDate">To</label>
+            <input type="datetime-local" id="endDate" />
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3>Filtered History Replay</h3>
+          <div class="chart-wrap">
+            <canvas id="logsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="table-tools">
+          <div class="entries-box">
+            <span>Show</span>
+            <select id="entriesPerPage">
+              <option value="10">10</option>
+              <option value="25" selected>25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span>entries</span>
+          </div>
+        </div>
+
+        <table id="logTable">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>Z</th>
+              <th>Mag</th>
+              <th>RMS</th>
+              <th>Base</th>
+              <th>Dev</th>
+              <th>Temp</th>
+              <th>Health</th>
+              <th>Severity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <div class="pagination">
+          <button id="prevBtn" onclick="changePage(-1)">Previous</button>
+          <span class="page-info" id="pageInfo">Page 1 of 1</span>
+          <button id="nextBtn" onclick="changePage(1)">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>© Stephano Mazaba</p>
+    </footer>
+
+    <script>
+      const periodEl = document.getElementById("period");
+      const viewByEl = document.getElementById("viewBy");
+      const logTypeEl = document.getElementById("logType");
+      const startGroup = document.getElementById("startGroup");
+      const endGroup = document.getElementById("endGroup");
+      const startDateEl = document.getElementById("startDate");
+      const endDateEl = document.getElementById("endDate");
+      const entriesEl = document.getElementById("entriesPerPage");
+
+      let logsChart;
+      let currentPage = 1;
+      let totalPages = 1;
+
+      const viewOptions = {
+        today: [
+          ["second", "Every Second"],
+          ["minute", "Every Minute"],
+          ["10min", "Every 10 Minutes"],
+          ["hour", "Every Hour"],
+        ],
+        week: [
+          ["hour", "Every Hour"],
+          ["day", "Every Day"],
+        ],
+        month: [
+          ["day", "Every Day"],
+          ["week", "Every Week"],
+        ],
+        year: [["month", "Every Month"]],
+        custom: [
+          ["second", "Every Second"],
+          ["minute", "Every Minute"],
+          ["10min", "Every 10 Minutes"],
+          ["hour", "Every Hour"],
+          ["day", "Every Day"],
+          ["week", "Every Week"],
+          ["month", "Every Month"],
+        ],
+      };
+
+      function initChart() {
+        const ctx = document.getElementById("logsChart").getContext("2d");
+        logsChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Magnitude",
+                data: [],
+                borderColor: "#8e44ad",
+                backgroundColor: "rgba(142, 68, 173, 0.1)",
+                tension: 0.15,
+                pointRadius: 0,
+                borderWidth: 2,
+              },
+              {
+                label: "RMS",
+                data: [],
+                borderColor: "#f39c12",
+                backgroundColor: "rgba(243, 156, 18, 0.1)",
+                tension: 0.15,
+                pointRadius: 0,
+                borderWidth: 2,
+              },
+              {
+                label: "Baseline",
+                data: [],
+                borderColor: "#2ecc71",
+                backgroundColor: "rgba(46, 204, 113, 0.1)",
+                tension: 0.15,
+                pointRadius: 0,
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+          },
+        });
+      }
+
+      function setViewOptions() {
+        const period = periodEl.value;
+        const options = viewOptions[period] || viewOptions.today;
+
+        viewByEl.innerHTML = "";
+        options.forEach(([value, label]) => {
+          const opt = document.createElement("option");
+          opt.value = value;
+          opt.textContent = label;
+          viewByEl.appendChild(opt);
+        });
+
+        if (period === "custom") {
+          startGroup.classList.remove("hidden");
+          endGroup.classList.remove("hidden");
+        } else {
+          startGroup.classList.add("hidden");
+          endGroup.classList.add("hidden");
+        }
+      }
+
+      async function loadLogs() {
+        const params = new URLSearchParams({
+          period: periodEl.value,
+          view_by: viewByEl.value,
+          log_type: logTypeEl.value,
+          page: currentPage,
+          per_page: entriesEl.value,
+        });
+
+        if (periodEl.value === "custom") {
+          if (startDateEl.value) params.append("start", startDateEl.value);
+          if (endDateEl.value) params.append("end", endDateEl.value);
+        }
+
+        const res = await fetch(`/get_logs?${params.toString()}`);
+        const payload = await res.json();
+
+        const data = payload.rows || [];
+        currentPage = payload.page || 1;
+        totalPages = payload.total_pages || 1;
+
+        const tbody = document.querySelector("#logTable tbody");
+        tbody.innerHTML = "";
+
+        const chartLabels = [];
+        const magData = [];
+        const rmsData = [];
+        const baselineData = [];
+
+        data.forEach((row) => {
+          const tr = document.createElement("tr");
+
+          if (row.severity === "Mild") tr.classList.add("row-mild");
+          if (row.severity === "Moderate") tr.classList.add("row-moderate");
+          if (row.severity === "Critical") tr.classList.add("row-critical");
+
+          const cells = [
+            row.timestamp,
+            row.x,
+            row.y,
+            row.z,
+            row.magnitude,
+            row.rms,
+            row.baseline,
+            row.deviation,
+            row.temperature,
+            row.health,
+            row.severity,
+            row.status,
+          ];
+
+          cells.forEach((cell, index) => {
+            const td = document.createElement("td");
+
+            if (index === 10) {
+              if (cell === "None") td.classList.add("sev-normal");
+              if (cell === "Mild") td.classList.add("sev-mild");
+              if (cell === "Moderate") td.classList.add("sev-moderate");
+              if (cell === "Critical") td.classList.add("sev-critical");
+            }
+
+            td.innerText = cell;
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+
+          chartLabels.push(row.timestamp);
+          magData.push(row.magnitude === "--" ? null : row.magnitude);
+          rmsData.push(row.rms === "--" ? null : row.rms);
+          baselineData.push(row.baseline === "--" ? null : row.baseline);
+        });
+
+        logsChart.data.labels = [...chartLabels].reverse();
+        logsChart.data.datasets[0].data = [...magData].reverse();
+        logsChart.data.datasets[1].data = [...rmsData].reverse();
+        logsChart.data.datasets[2].data = [...baselineData].reverse();
+        logsChart.update();
+
+        document.getElementById("pageInfo").innerText =
+          `Page ${currentPage} of ${totalPages}`;
+        document.getElementById("prevBtn").disabled = currentPage <= 1;
+        document.getElementById("nextBtn").disabled = currentPage >= totalPages;
+      }
+
+      function changePage(delta) {
+        const next = currentPage + delta;
+        if (next < 1 || next > totalPages) return;
+        currentPage = next;
+        loadLogs();
+      }
+
+      function downloadLogs() {
+        const params = new URLSearchParams({
+          period: periodEl.value,
+          view_by: viewByEl.value,
+          log_type: logTypeEl.value,
+        });
+
+        if (periodEl.value === "custom") {
+          if (startDateEl.value) params.append("start", startDateEl.value);
+          if (endDateEl.value) params.append("end", endDateEl.value);
+        }
+
+        window.location.href = `/download_logs?${params.toString()}`;
+      }
+
+      function resetToFirstPage() {
+        currentPage = 1;
+        loadLogs();
+      }
+
+      periodEl.addEventListener("change", () => {
+        setViewOptions();
+        resetToFirstPage();
+      });
+
+      viewByEl.addEventListener("change", resetToFirstPage);
+      logTypeEl.addEventListener("change", resetToFirstPage);
+      startDateEl.addEventListener("change", resetToFirstPage);
+      endDateEl.addEventListener("change", resetToFirstPage);
+      entriesEl.addEventListener("change", resetToFirstPage);
+
+      initChart();
+      setViewOptions();
+      loadLogs();
+      setInterval(loadLogs, 1000);
+
+      async function updateLiveStatus() {
+        try {
+          const res = await fetch("/data");
+          const d = await res.json();
+
+          const status = (d.status || "").toLowerCase();
+          const liveEl = document.getElementById("liveIndicator");
+
+          if (status.includes("running")) {
+            liveEl.style.display = "flex";
+          } else {
+            liveEl.style.display = "none";
+          }
+        } catch (err) {
+          // If backend unreachable, hide live indicator
+          document.getElementById("liveIndicator").style.display = "none";
+        }
+      }
+      updateLiveStatus();
+      setInterval(updateLiveStatus, 1000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TwinGuard Dashboard</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/justgage/1.4.1/justgage.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+
+  <body>
+    <header class="dashboard-header">
+      <h1>‎</h1>
+
+      <div>
+        <h1>TwinGuard Dashboard</h1>
+        <p>Real-Time Digital Twin for Motor Monitoring</p>
+      </div>
+
+      <a href="/logout" class="logout-btn">Logout</a>
+    </header>
+
+    <div class="main-container">
+      <div class="upper-section">
+        <aside class="info-panel">
+          <div class="plant-icon">
+            <img
+              src="https://static.wixstatic.com/media/40831b_c1cf0660c3634558897e67b7c5993fe2~mv2.png/v1/fill/w_462,h_688,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/40831b_c1cf0660c3634558897e67b7c5993fe2~mv2.png"
+              alt="Motor"
+              class="motor-icon"
+            />
+          </div>
+
+          <div class="date-time">
+            <div class="day-date-row">
+              <p id="day" class="day-text"></p>
+              <p id="date" class="date-text"></p>
+            </div>
+            <p id="time" class="time-text"></p>
+          </div>
+
+          <div class="left-insights">
+            <div class="insight-box">
+              <span class="insight-title">Fault Level</span>
+              <span id="faultLevel" class="insight-value">--</span>
+            </div>
+
+            <div class="insight-box">
+              <span class="insight-title">Last Fault</span>
+              <span id="lastFault">--</span>
+            </div>
+
+            <div class="insight-box">
+              <span class="insight-title">Fault Count (Today)</span>
+              <span id="faultCount">0</span>
+            </div>
+
+            <div class="insight-box">
+              <span class="insight-title">Max Deviation</span>
+              <span id="maxDeviation">0</span>
+            </div>
+          </div>
+
+          <div class="reports-link">
+            <a href="/logs" class="report-link">
+              View Logs <i class="fas fa-chevron-right"></i>
+            </a>
+          </div>
+        </aside>
+
+        <div class="dashboard-content">
+          <div class="container">
+            <section class="summary-container">
+              <div class="summary-item crop-box">
+                <div class="summary-content">
+                  <i class="fas fa-microchip summary-icon"></i>
+                  <div>
+                    <h3>System</h3>
+                    <p>ESP32 + ADXL345</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-heartbeat summary-icon"></i>
+                  <div>
+                    <h3>Health Status</h3>
+                    <p id="systemHealth">Calibrating...</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-layer-group summary-icon"></i>
+                  <div>
+                    <h3>Severity</h3>
+                    <p id="severityCard">None</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-bullseye summary-icon"></i>
+                  <div>
+                    <h3>Baseline</h3>
+                    <p id="baseline">0</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-chart-line summary-icon"></i>
+                  <div>
+                    <h3>RMS</h3>
+                    <p id="rms">0</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-cogs summary-icon"></i>
+                  <div>
+                    <h3>System Status</h3>
+                    <p id="systemStatus">Waiting...</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-thermometer-half summary-icon"></i>
+                  <div>
+                    <h3>Temperature</h3>
+                    <p id="temperatureCard">-- °C</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-item">
+                <div class="summary-content">
+                  <i class="fas fa-exclamation-triangle summary-icon"></i>
+                  <div>
+                    <h3>Deviation</h3>
+                    <p id="deviation">0</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="gauge-container">
+              <div class="gauge">
+                <div id="xGauge"></div>
+                <p class="gauge-label">X Axis</p>
+              </div>
+              <div class="gauge">
+                <div id="yGauge"></div>
+                <p class="gauge-label">Y Axis</p>
+              </div>
+              <div class="gauge">
+                <div id="zGauge"></div>
+                <p class="gauge-label">Z Axis</p>
+              </div>
+              <div class="gauge">
+                <div id="magGauge"></div>
+                <p class="gauge-label">Magnitude</p>
+              </div>
+            </section>
+
+            <section class="main-data-container">
+              <div class="combined-data-container">
+                <div class="graph-card">
+                  <h2>X, Y & Z Axis Over Time</h2>
+                  <div class="chart-container">
+                    <canvas id="xyzChart"></canvas>
+                  </div>
+                </div>
+
+                <div class="graph-card">
+                  <h2>Magnitude Over Time</h2>
+                  <div class="chart-container">
+                    <canvas id="magChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>© TwinGuard by Stephano Mazaba</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

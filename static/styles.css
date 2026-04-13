@@ -1,0 +1,390 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+header {
+  background-color: #74a076;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  position: relative; /* IMPORTANT */
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.logout-btn {
+  background-color: white;
+  color: #74a076;
+  border: 2px solid #74a076;
+  padding: 10px 16px;
+  margin: 0 50px 0 0;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #aac2aa;
+  color: white;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 120px);
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+header p {
+  margin: 10px 0 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.upper-section {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.info-panel {
+  background-color: #74a076;
+  color: white;
+  padding: 25px;
+  width: 300px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  height: auto;
+  min-height: 100%;
+}
+
+.plant-icon {
+  text-align: center;
+}
+
+.motor-icon {
+  width: auto;
+  height: auto;
+  max-width: 100%;   /* (optional) stops it from overflowing */
+  filter: brightness(0) invert(1);
+  margin: -15px;
+  margin-top: -60px;
+}
+
+.date-time {
+  text-align: center;
+  margin: 20px 0;
+  flex-grow: 0;
+}
+
+.day-date-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.day-text,
+.date-text {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.time-text {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.reports-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.report-link {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+  padding: 8px 15px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.report-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.report-link i {
+  margin-left: 5px;
+  transition: transform 0.3s;
+}
+
+.report-link:hover i {
+  transform: translateX(3px);
+}
+
+.dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  width: 100%;
+}
+
+.summary-item {
+  background-color: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: auto;
+  min-height: 50px;
+}
+
+.summary-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.summary-icon {
+  font-size: 35px;
+  margin-right: 40px;
+  color: #74a076;
+  width: 30px;
+  text-align: center;
+}
+
+.summary-item h3 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.summary-item p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.crop-box {
+  grid-row: span 2;
+}
+
+.gauge-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.gauge {
+  width: 160px;
+  height: 160px;
+  text-align: center;
+}
+
+.gauge-label {
+  margin-top: 12px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.main-data-container {
+  width: 100%;
+  margin-top: 25px;
+}
+
+.combined-data-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.graph-card {
+  flex: 1;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.graph-card h2 {
+  margin: 0 0 15px 0;
+  font-size: 1.2rem;
+  color: #2e7d32;
+}
+
+.chart-container {
+  position: relative;
+  height: 350px;
+  width: 100%;
+}
+
+.chart-container canvas {
+  display: block;
+}
+
+.status-normal {
+  color: #4caf50 !important;
+  font-weight: 600;
+}
+
+.status-mild {
+  color: #c7a008 !important;
+  font-weight: 600;
+}
+
+.status-moderate {
+  color: #f57c00 !important;
+  font-weight: 600;
+}
+
+.status-critical {
+  color: #d32f2f !important;
+  font-weight: 600;
+}
+
+.status-running {
+  color: #4caf50 !important; /* green */
+}
+
+.status-connecting {
+  color: #f57c00 !important; /* orange */
+}
+
+.status-failed {
+  color: #d32f2f !important; /* red */
+}
+
+.status-cal {
+  color: #777 !important;
+}
+
+@media (max-width: 1024px) {
+  .combined-data-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .upper-section {
+    flex-direction: column;
+  }
+
+  .info-panel {
+    width: 100%;
+    margin-bottom: 20px;
+    height: auto;
+    min-height: auto;
+  }
+
+  .dashboard-content {
+    padding: 0 15px;
+  }
+
+  .summary-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gauge-container {
+    flex-wrap: wrap;
+  }
+
+  .gauge {
+    margin: 10px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+}
+
+.left-insights {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.insight-box {
+  background: #aac2aa;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.insight-title {
+  font-size: 12px;
+  color: #666;
+  display: block;
+}
+
+.insight-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+}
+
+/* Fault level colors */
+.fault-normal { color: #2ecc71; }
+.fault-mild { color: #f1c40f; }
+.fault-moderate { color: #e67e22; }
+.fault-critical { color: #e74c3c; }
+
+footer {
+  background-color: #74a076;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 20px;
+  width: 100%;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+footer p {
+  margin: 0;
+  font-size: 1rem;
+}

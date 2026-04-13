@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TwinGuard Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+
+    <style>
+      .login-page-container {
+        padding: 30px 20px;
+      }
+
+      .login-shell {
+        overflow: hidden;
+        display: flex;
+        min-height: 460px;
+      }
+
+      .login-left,
+      .login-right {
+        flex: 1;
+      }
+
+      .login-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-left img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        margin-top: -100px;
+      }
+
+      .login-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-box {
+        width: 100%;
+        max-width: 360px;
+      }
+
+      .login-box h2 {
+        margin: 0 0 0 0;
+        color: #2e7d32;
+        font-size: 32px;
+      }
+
+      .login-box p {
+        margin: 0 0 25px 0;
+        color: #666;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: white;
+        font-size: 14px;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #74a076;
+        box-shadow: 0 0 0 2px rgba(116, 160, 118, 0.15);
+      }
+
+      .login-btn {
+        width: 100%;
+        background-color: #74a076;
+        color: white;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .login-btn:hover {
+        background-color: #5f8b62;
+      }
+
+      .error-box {
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        background: #fdeaea;
+        color: #c62828;
+        font-size: 14px;
+        border: 1px solid #f5c2c2;
+      }
+
+      .login-note {
+        margin-top: 18px;
+        font-size: 13px;
+        color: #777;
+      }
+
+      @media (max-width: 900px) {
+        .login-shell {
+          flex-direction: column;
+        }
+
+        .login-left {
+          min-height: 220px;
+        }
+
+        .login-left img {
+          max-height: 180px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>TwinGuard Dashboard</h1>
+      <p>Administrator login</p>
+    </header>
+
+    <div class="main-container">
+      <div class="login-page-container">
+        <div class="login-shell">
+          <div class="login-left">
+            <img
+              src="https://static.wixstatic.com/media/40831b_c1cf0660c3634558897e67b7c5993fe2~mv2.png/v1/fill/w_462,h_688,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/40831b_c1cf0660c3634558897e67b7c5993fe2~mv2.png"
+              alt="TwinGuard Logo"
+            />
+          </div>
+
+          <div class="login-right">
+            <div class="login-box">
+              <h2>Admin Login</h2>
+              <p>
+                Sign in to access the TwinGuard monitoring dashboard and logs.
+              </p>
+
+              <form method="POST">
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input
+                    id="username"
+                    type="text"
+                    name="username"
+                    placeholder="Enter username"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="Enter password"
+                    required
+                  />
+                </div>
+
+                <button class="login-btn" type="submit">Login</button>
+              </form>
+
+              {% if error %}
+              <div class="error-box">{{ error }}</div>
+              {% endif %}
+
+              <div class="login-note">
+                Access is restricted to authorised administrators only.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>©️ Stephano Mazaba</p>
+    </footer>
+  </body>
+</html>
