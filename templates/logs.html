@@ -1,3 +1,22 @@
+<!--
+TwinGuard Logs Page
+
+PURPOSE:
+This page provides historical analysis of motor vibration data.
+
+WHAT IT DOES:
+- Displays stored sensor logs from backend (Flask /get_logs)
+- Allows filtering by time range (today, week, month, custom)
+- Groups data at different resolutions (second, minute, hour, etc.)
+- Shows both table view + chart view of historical data
+- Enables CSV export of processed logs
+- Provides fault classification visualization
+
+ROLE IN SYSTEM:
+This is the ANALYTICS + FORENSIC layer of TwinGuard.
+While the dashboard shows real-time data, this page shows history.
+-->
+
 <!doctype html>
 <html lang="en">
   <head>

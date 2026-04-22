@@ -1,3 +1,22 @@
+<!--
+TwinGuard Login Page
+
+PURPOSE:
+This page handles authentication for the system.
+
+WHAT IT DOES:
+- Provides admin login form (username + password)
+- Sends credentials to Flask backend (/login route)
+- Displays error messages if login fails
+- Controls access to the dashboard (security gate)
+
+HOW IT WORKS:
+- Flask renders this page using login.html
+- On submit → POST request is sent to backend
+- Backend validates credentials and sets session["logged_in"]
+- If successful → redirects to dashboard (/)
+-->
+
 <!doctype html>
 <html lang="en">
   <head>

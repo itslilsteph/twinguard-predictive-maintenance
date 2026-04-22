@@ -1,3 +1,22 @@
+<!--
+TwinGuard Dashboard (Frontend UI)
+
+This file defines the main real-time monitoring dashboard.
+
+What it does:
+- Displays live motor health data from Flask backend
+- Shows vibration values (X, Y, Z, Magnitude)
+- Visualises system state using gauges + charts
+- Displays fault status, severity, and baseline health
+- Acts as the user interface for the digital twin system
+
+How it works:
+- JavaScript (script.js) continuously fetches /data from Flask
+- Chart.js updates graphs in real time
+- JustGage renders live sensor gauges
+- Flask injects static file paths using Jinja2
+-->
+
 <!doctype html>
 <html lang="en">
   <head>
